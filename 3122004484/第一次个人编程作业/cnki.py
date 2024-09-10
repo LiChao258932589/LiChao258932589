@@ -8,6 +8,8 @@
 import sys
 import re
 import jieba
+from collections import Counter
+import math
 
 
 # 读取文件内容函数
@@ -35,6 +37,29 @@ def preprocess(text):
     return words
 
 
+# 计算余弦相似度函数
+def cosine_similarity(text1, text2):
+    # 统计词频
+    c1 = Counter(text1)
+    c2 = Counter(text2)
+
+    words = set(c1.keys()).union(set(c2.keys()))  # 计算词汇的交集
+
+    # 构造词频向量
+    v1 = [c1.get(word, 0) for word in words]
+    v2 = [c2.get(word, 0) for word in words]
+
+    # 计算余弦相似度
+    dot_product = sum(a * b for a, b in zip(v1, v2))  # 计算点积
+    n1 = math.sqrt(sum(a * a for a in v1))  # 计算向量的模
+    n2 = math.sqrt(sum(b * b for b in v2))
+
+    if n1 == 0 or n2 == 0:
+        return 0.00
+    else:
+        return dot_product / (n1 * n2)
+
+
 def main():
     # 从命令行获取参数
     if len(sys.argv) != 4:
@@ -54,8 +79,9 @@ def main():
     original_words = preprocess(original_text)
     plagiarized_words = preprocess(plagiarized_text)
 
+    # 计算余弦相似度
+    similarity = cosine_similarity(original_words, plagiarized_words)
+
     
-
-
 if __name__ == "__main__":
     main()
