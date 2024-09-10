@@ -6,8 +6,11 @@
 5. 输出结果
 """
 import sys
+import re
+import jieba
 
-# 读取文件内容
+
+# 读取文件内容函数
 def read_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -25,6 +28,12 @@ def read_file(file_path):
     return text
 
 
+# 预处理文本函数
+def preprocess(text):
+    text = re.sub(r'[^\w\s]', '', text)  # 去除标点符号
+    words = jieba.lcut(text, cut_all=False)  # 使用jieba分词，选择精确模式
+    return words
+
 
 def main():
     # 从命令行获取参数
@@ -40,6 +49,12 @@ def main():
     original_text = read_file(original_file)
     plagiarized_text = read_file(plagiarized_file)
     output_text = read_file(output_file)
+
+    # 预处理文本，使用jieba分词
+    original_words = preprocess(original_text)
+    plagiarized_words = preprocess(plagiarized_text)
+
+    
 
 
 if __name__ == "__main__":
