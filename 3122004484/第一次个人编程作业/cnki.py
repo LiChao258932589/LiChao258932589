@@ -1,10 +1,3 @@
-"""
-1. 读取文件内容
-2. 预处理文本
-3. 计算词频向量
-4. 计算余弦相似度
-5. 输出结果
-"""
 import sys
 import re
 import jieba
@@ -82,6 +75,10 @@ def main():
     # 计算余弦相似度
     similarity = cosine_similarity(original_words, plagiarized_words)
 
-    
+    # 输出结果到答案文件
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(f"{similarity:.2f}")
+
+
 if __name__ == "__main__":
     main()
