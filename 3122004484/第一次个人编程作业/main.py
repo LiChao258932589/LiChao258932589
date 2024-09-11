@@ -6,21 +6,26 @@ import math
 # from line_profiler import LineProfiler
 
 
-# 读取文件内容函数
+# 读取文件函数
 def read_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             text = f.read()
     except FileNotFoundError:
         print(f"文件{file_path}未找到，请检查文件路径是否正确。")
+        raise
     except PermissionError:
         print(f"没有权限读取文件{file_path}，请检查该文件的权限设置。")
+        raise
     except UnicodeError:
         print("文件编码错误，请尝试使用其他编码格式读取。")
+        raise
     except IOError:
         print(f"文件{file_path}读取时发生I/O错误，请检查硬盘或文件系统")
+        raise
     except Exception as e:
         print(f"读取文件{file_path}发生未知错误：{e}")
+        raise
     return text
 
 
@@ -28,7 +33,7 @@ def read_file(file_path):
 def preprocess(text):
     # 初始化 jieba 分词器
     jieba.initialize()  # 提前加载词典，提高首次调用速度
-    text_cleaned = re.sub(r'[^\w\s]|s+', '', text)  # 去除标点符号、换行符和多余的空格
+    text_cleaned = re.sub(r'[^\w\s]|\s+', '', text)  # 去除标点符号、换行符和多余的空格
     words = jieba.lcut(text_cleaned, cut_all=False)  # 使用jieba分词，选择精确模式
     return words
 
@@ -59,7 +64,7 @@ def cosine_similarity(text1, text2):
 def main():
     # 从命令行获取参数
     if len(sys.argv) != 4:
-        print("用法: python plagiarism_check.py <原文文件路径> <抄袭版文件路径> <输出结果文件路径>")
+        print("用法: python main.py <原文文件路径> <抄袭版文件路径> <输出结果文件路径>")
         return
 
     original_file = sys.argv[1]
