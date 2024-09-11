@@ -3,6 +3,7 @@ import re
 import jieba
 from collections import Counter
 import math
+# from line_profiler import LineProfiler
 
 
 # 读取文件内容函数
@@ -25,8 +26,10 @@ def read_file(file_path):
 
 # 预处理文本函数
 def preprocess(text):
-    text = re.sub(r'[^\w\s]', '', text)  # 去除标点符号
-    words = jieba.lcut(text, cut_all=False)  # 使用jieba分词，选择精确模式
+    # 初始化 jieba 分词器
+    jieba.initialize()  # 提前加载词典，提高首次调用速度
+    text_cleaned = re.sub(r'[^\w\s]|s+', '', text)  # 去除标点符号、换行符和多余的空格
+    words = jieba.lcut(text_cleaned, cut_all=False)  # 使用jieba分词，选择精确模式
     return words
 
 
@@ -56,7 +59,7 @@ def cosine_similarity(text1, text2):
 def main():
     # 从命令行获取参数
     if len(sys.argv) != 4:
-        print("用法: python cnki.py <原文文件路径> <抄袭版文件路径> <输出结果文件路径>")
+        print("用法: python plagiarism_check.py <原文文件路径> <抄袭版文件路径> <输出结果文件路径>")
         return
 
     original_file = sys.argv[1]
@@ -66,7 +69,6 @@ def main():
     # 读取文件内容
     original_text = read_file(original_file)
     plagiarized_text = read_file(plagiarized_file)
-    output_text = read_file(output_file)
 
     # 预处理文本，使用jieba分词
     original_words = preprocess(original_text)
@@ -82,3 +84,12 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # 性能分析代码
+    # lp = LineProfiler()
+    # lp.add_function(main)
+    # lp.add_function(read_file)
+    # lp.add_function(preprocess)
+    # lp.add_function(cosine_similarity)
+    # test_func = lp(main)
+    # test_func()
+    # lp.print_stats()
