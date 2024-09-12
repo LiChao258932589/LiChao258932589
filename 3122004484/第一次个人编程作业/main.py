@@ -77,6 +77,7 @@ def main():
 
     # 预处理文本，使用jieba分词
     original_words = preprocess(original_text)
+    print(original_words)
     plagiarized_words = preprocess(plagiarized_text)
 
     # 计算余弦相似度
