@@ -3,7 +3,7 @@ import re
 import jieba
 from collections import Counter
 import math
-# from line_profiler import LineProfiler
+from line_profiler import LineProfiler
 
 
 # 读取文件函数
@@ -77,7 +77,6 @@ def main():
 
     # 预处理文本，使用jieba分词
     original_words = preprocess(original_text)
-    print(original_words)
     plagiarized_words = preprocess(plagiarized_text)
 
     # 计算余弦相似度
@@ -91,11 +90,11 @@ def main():
 if __name__ == "__main__":
     main()
     # 性能分析代码
-    # lp = LineProfiler()
-    # lp.add_function(main)
-    # lp.add_function(read_file)
-    # lp.add_function(preprocess)
-    # lp.add_function(cosine_similarity)
-    # test_func = lp(main)
-    # test_func()
-    # lp.print_stats()
+    lp = LineProfiler()
+    lp.add_function(main)
+    lp.add_function(read_file)
+    lp.add_function(preprocess)
+    lp.add_function(cosine_similarity)
+    test_func = lp(main)
+    test_func()
+    lp.print_stats()
