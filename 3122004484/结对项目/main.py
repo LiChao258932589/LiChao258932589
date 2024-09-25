@@ -8,18 +8,22 @@ from typing import Union
 # 解析命令行参数
 def parse_args():
     parser = argparse.ArgumentParser(description="自动生成小学四则运算题目的命令行程序") # 为程序生成的帮助信息添加描述
-    parser.add_argument("-n", type=int, required=True, help="生成题目的数量") # 添加必须的整型参数-n
-    parser.add_argument("-r", type=int, required=True, help="数值范围（自然数、真分数和真分数分母的范围）") # 添加必须的整型参数-r
+    parser.add_argument("-n", type=int, help="生成题目的数量") # 添加必须的整型参数-n
+    parser.add_argument("-r", type=int, help="数值范围（自然数、真分数和真分数分母的范围）") # 添加必须的整型参数-r
     parser.add_argument("-e", type=str, help="题目文件路径") # 添加参数-e
     parser.add_argument("-a", type=str, help="答案文件路径") # 添加参数-a
     args = parser.parse_args()
 
-    # 检验参数的合理性
-    if args.n <= 0:
-        print("生成题目的数量必须为正整数。")
+    # 判断是否输入参数-r
+    if args.n and not args.r:
+        print("请输入数值范围！")
+
+    # 验证参数合理性
+    if args.n and args.n < 0:
+        print("题目数量必须为正数！")
         exit(1)
-    if args.r <= 0:
-        print("数值范围必须为正整数。")
+    if args.r and args.r < 0:
+        print("数值范围必须为正数！")
         exit(1)
     return args
 
